@@ -13,7 +13,8 @@ dependencies = [
 ]
 
 [project.scripts]
-slowpoke = "slowpoke.cli:cli"
+slowpoke = "slowpoke.cli:main"
+
 
 [build-system]
 requires = ["setuptools", "wheel"]

@@ -40,6 +40,15 @@
         "documentation": {}
     },
     {
+        "label": "sys",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
+        "documentation": {}
+    },
+    {
         "label": "json",
         "kind": 6,
         "isExtraImport": true,
@@ -115,6 +124,24 @@
         "description": "examples.app",
         "peekOfCode": "app = Flask(__name__)\nmonitor(app)\n@app.route(\"/\")\ndef fast():\n    return \"Fast route\"\n@app.route(\"/slow\")\ndef slow():\n    import time; time.sleep(1.5)\n    return \"Slow route\"\nif __name__ == \"__main__\":",
         "detail": "examples.app",
+        "documentation": {}
+    },
+    {
+        "label": "report",
+        "kind": 2,
+        "importPath": "slowpoke.cli",
+        "description": "slowpoke.cli",
+        "peekOfCode": "def report():\n    try:\n        with open(LOG_FILE, \"r\") as f:\n            logs = f.readlines()\n            if not logs:\n                print(\"No slow requests logged yet.\")\n            for line in logs:\n                print(line.strip())\n    except FileNotFoundError:\n        print(\"Log file not found.\")",
+        "detail": "slowpoke.cli",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "slowpoke.cli",
+        "description": "slowpoke.cli",
+        "peekOfCode": "def main():\n    if len(sys.argv) > 1 and sys.argv[1] == \"report\":\n        report()\n    else:\n        print(\"Usage: slowpoke report\")",
+        "detail": "slowpoke.cli",
         "documentation": {}
     },
     {
