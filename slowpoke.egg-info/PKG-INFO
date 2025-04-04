@@ -1,0 +1,14 @@
+Metadata-Version: 2.4
+Name: slowpoke
+Version: 0.1.0
+Summary: Track slow Flask routes and monitor bottlenecks
+Author-email: Your Name <you@example.com>
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: flask
+Requires-Dist: click
+Requires-Dist: tabulate
+Dynamic: license-file
+
+ 

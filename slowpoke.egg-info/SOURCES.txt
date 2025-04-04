@@ -1,0 +1,15 @@
+LICENSE
+README.md
+pyproject.toml
+slowpoke/__init__.py
+slowpoke/cli.py
+slowpoke/config.py
+slowpoke/core.py
+slowpoke/logger.py
+slowpoke.egg-info/PKG-INFO
+slowpoke.egg-info/SOURCES.txt
+slowpoke.egg-info/dependency_links.txt
+slowpoke.egg-info/entry_points.txt
+slowpoke.egg-info/requires.txt
+slowpoke.egg-info/top_level.txt
+tests/test_core.py

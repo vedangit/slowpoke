@@ -1,0 +1,183 @@
+[
+    {
+        "label": "Flask",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "request",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "g",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "request",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "monitor",
+        "importPath": "slowpoke",
+        "description": "slowpoke",
+        "isExtraImport": true,
+        "detail": "slowpoke",
+        "documentation": {}
+    },
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "time",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "time",
+        "description": "time",
+        "detail": "time",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "fast",
+        "kind": 2,
+        "importPath": "examples.app",
+        "description": "examples.app",
+        "peekOfCode": "def fast():\n    return \"Fast route\"\n@app.route(\"/slow\")\ndef slow():\n    import time; time.sleep(1.5)\n    return \"Slow route\"\nif __name__ == \"__main__\":\n    app.run(debug=True)",
+        "detail": "examples.app",
+        "documentation": {}
+    },
+    {
+        "label": "slow",
+        "kind": 2,
+        "importPath": "examples.app",
+        "description": "examples.app",
+        "peekOfCode": "def slow():\n    import time; time.sleep(1.5)\n    return \"Slow route\"\nif __name__ == \"__main__\":\n    app.run(debug=True)",
+        "detail": "examples.app",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "examples.app",
+        "description": "examples.app",
+        "peekOfCode": "app = Flask(__name__)\nmonitor(app)\n@app.route(\"/\")\ndef fast():\n    return \"Fast route\"\n@app.route(\"/slow\")\ndef slow():\n    import time; time.sleep(1.5)\n    return \"Slow route\"\nif __name__ == \"__main__\":",
+        "detail": "examples.app",
+        "documentation": {}
+    },
+    {
+        "label": "get_config",
+        "kind": 2,
+        "importPath": "slowpoke.config",
+        "description": "slowpoke.config",
+        "peekOfCode": "def get_config():\n    if CONFIG_FILE.exists():\n        try:\n            with open(CONFIG_FILE, \"r\") as f:\n                return json.load(f)\n        except:\n            return DEFAULT_CONFIG\n    return DEFAULT_CONFIG",
+        "detail": "slowpoke.config",
+        "documentation": {}
+    },
+    {
+        "label": "CONFIG_FILE",
+        "kind": 5,
+        "importPath": "slowpoke.config",
+        "description": "slowpoke.config",
+        "peekOfCode": "CONFIG_FILE = Path.home() / \".slowpoke\" / \"config.json\"\nDEFAULT_CONFIG = {\n    \"threshold_ms\": 100\n}\ndef get_config():\n    if CONFIG_FILE.exists():\n        try:\n            with open(CONFIG_FILE, \"r\") as f:\n                return json.load(f)\n        except:",
+        "detail": "slowpoke.config",
+        "documentation": {}
+    },
+    {
+        "label": "DEFAULT_CONFIG",
+        "kind": 5,
+        "importPath": "slowpoke.config",
+        "description": "slowpoke.config",
+        "peekOfCode": "DEFAULT_CONFIG = {\n    \"threshold_ms\": 100\n}\ndef get_config():\n    if CONFIG_FILE.exists():\n        try:\n            with open(CONFIG_FILE, \"r\") as f:\n                return json.load(f)\n        except:\n            return DEFAULT_CONFIG",
+        "detail": "slowpoke.config",
+        "documentation": {}
+    },
+    {
+        "label": "monitor",
+        "kind": 2,
+        "importPath": "slowpoke.core",
+        "description": "slowpoke.core",
+        "peekOfCode": "def monitor(app):\n    config = get_config()\n    threshold_ms = config.get(\"threshold_ms\", 100)\n    @app.before_request\n    def _before_request():\n        request._slowpoke_start= time.time()\n    @app.after_request\n    def _after_request(response):\n        start = getattr(request, '_slowpoke_start', None)\n        if start:",
+        "detail": "slowpoke.core",
+        "documentation": {}
+    },
+    {
+        "label": "log_slow_request",
+        "kind": 2,
+        "importPath": "slowpoke.logger",
+        "description": "slowpoke.logger",
+        "peekOfCode": "def log_slow_request(request, response, duration):\n    LOG_DIR.mkdir(parents=True, exist_ok=True)\n    log_entry = {\n        \"timestamp\": datetime.now().isoformat(),\n        \"method\": request.method,\n        \"route\": request.path,\n        \"status_code\": response.status_code,\n        \"duration_ms\": round(duration, 2)\n    }\n    with open(LOG_FILE, \"a\") as f:",
+        "detail": "slowpoke.logger",
+        "documentation": {}
+    },
+    {
+        "label": "LOG_DIR",
+        "kind": 5,
+        "importPath": "slowpoke.logger",
+        "description": "slowpoke.logger",
+        "peekOfCode": "LOG_DIR = Path.home() /'.slowpoke' / 'logs'\nLOG_FILE = LOG_DIR / 'slowpoke.log'\ndef log_slow_request(request, response, duration):\n    LOG_DIR.mkdir(parents=True, exist_ok=True)\n    log_entry = {\n        \"timestamp\": datetime.now().isoformat(),\n        \"method\": request.method,\n        \"route\": request.path,\n        \"status_code\": response.status_code,\n        \"duration_ms\": round(duration, 2)",
+        "detail": "slowpoke.logger",
+        "documentation": {}
+    },
+    {
+        "label": "LOG_FILE",
+        "kind": 5,
+        "importPath": "slowpoke.logger",
+        "description": "slowpoke.logger",
+        "peekOfCode": "LOG_FILE = LOG_DIR / 'slowpoke.log'\ndef log_slow_request(request, response, duration):\n    LOG_DIR.mkdir(parents=True, exist_ok=True)\n    log_entry = {\n        \"timestamp\": datetime.now().isoformat(),\n        \"method\": request.method,\n        \"route\": request.path,\n        \"status_code\": response.status_code,\n        \"duration_ms\": round(duration, 2)\n    }",
+        "detail": "slowpoke.logger",
+        "documentation": {}
+    }
+]

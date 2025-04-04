@@ -1,0 +1,20 @@
+ 
+[project]
+name = "slowpoke"
+version = "0.1.0"
+description = "Track slow Flask routes and monitor bottlenecks"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = [
+    "flask",
+    "click",
+    "tabulate"
+]
+
+[project.scripts]
+slowpoke = "slowpoke.cli:cli"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
