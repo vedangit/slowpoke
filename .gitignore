@@ -1,0 +1,38 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.env/
+.env.*
+
+# Logs
+*.log
+*.log.*
+*.out
+*.err
+.slowpoke/
+
+# macOS / Linux / Windows junk
+.DS_Store
+Thumbs.db
+
+# PyInstaller
+*.spec
+
+# Testing
+.coverage
+.tox/
+nosetests.xml
+test-results/
+htmlcov/
+
+# Packaging
+build/
+dist/
+*.egg-info/
+
+# Jupyter notebooks (if you ever test in one)
+.ipynb_checkpoints/
