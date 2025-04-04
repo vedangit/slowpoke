@@ -12,4 +12,5 @@ slowpoke.egg-info/dependency_links.txt
 slowpoke.egg-info/entry_points.txt
 slowpoke.egg-info/requires.txt
 slowpoke.egg-info/top_level.txt
+tests/test_cli.py
 tests/test_core.py

@@ -32,6 +32,14 @@
         "documentation": {}
     },
     {
+        "label": "Flask",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
         "label": "monitor",
         "importPath": "slowpoke",
         "description": "slowpoke",
@@ -74,6 +82,30 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "time",
         "kind": 6,
         "isExtraImport": true,
@@ -97,6 +129,55 @@
         "description": "datetime",
         "isExtraImport": true,
         "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "subprocess",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "subprocess",
+        "description": "subprocess",
+        "detail": "subprocess",
+        "documentation": {}
+    },
+    {
+        "label": "LOG_FILE",
+        "importPath": "slowpoke.logger",
+        "description": "slowpoke.logger",
+        "isExtraImport": true,
+        "detail": "slowpoke.logger",
+        "documentation": {}
+    },
+    {
+        "label": "log_slow_request",
+        "importPath": "slowpoke.logger",
+        "description": "slowpoke.logger",
+        "isExtraImport": true,
+        "detail": "slowpoke.logger",
+        "documentation": {}
+    },
+    {
+        "label": "patch",
+        "importPath": "unittest.mock",
+        "description": "unittest.mock",
+        "isExtraImport": true,
+        "detail": "unittest.mock",
+        "documentation": {}
+    },
+    {
+        "label": "get_config",
+        "importPath": "slowpoke.config",
+        "description": "slowpoke.config",
+        "isExtraImport": true,
+        "detail": "slowpoke.config",
+        "documentation": {}
+    },
+    {
+        "label": "monitor",
+        "importPath": "slowpoke.core",
+        "description": "slowpoke.core",
+        "isExtraImport": true,
+        "detail": "slowpoke.core",
         "documentation": {}
     },
     {
@@ -205,6 +286,60 @@
         "description": "slowpoke.logger",
         "peekOfCode": "LOG_FILE = LOG_DIR / 'slowpoke.log'\ndef log_slow_request(request, response, duration):\n    LOG_DIR.mkdir(parents=True, exist_ok=True)\n    log_entry = {\n        \"timestamp\": datetime.now().isoformat(),\n        \"method\": request.method,\n        \"route\": request.path,\n        \"status_code\": response.status_code,\n        \"duration_ms\": round(duration, 2)\n    }",
         "detail": "slowpoke.logger",
+        "documentation": {}
+    },
+    {
+        "label": "test_cli_report",
+        "kind": 2,
+        "importPath": "tests.test_cli",
+        "description": "tests.test_cli",
+        "peekOfCode": "def test_cli_report(tmp_path, monkeypatch, capsys):\n    log_path = tmp_path / \"slowpoke.log\"\n    monkeypatch.setattr(\"slowpoke.logger.LOG_FILE\", log_path)\n    monkeypatch.setattr(\"slowpoke.logger.LOG_DIR\", tmp_path)\n    # Create a dummy log entry\n    log_path.write_text('{\"method\": \"GET\", \"route\": \"/\", \"status_code\": 200, \"duration_ms\": 150}\\n')\n    from slowpoke.cli import report\n    report()\n    out = capsys.readouterr().out\n    assert \"GET\" in out",
+        "detail": "tests.test_cli",
+        "documentation": {}
+    },
+    {
+        "label": "test_default_config",
+        "kind": 2,
+        "importPath": "tests.test_config",
+        "description": "tests.test_config",
+        "peekOfCode": "def test_default_config():\n    # Simulate config file not existing\n    with patch(\"pathlib.Path.exists\", return_value=False):\n        config = get_config()\n        assert config[\"threshold_ms\"] == 100",
+        "detail": "tests.test_config",
+        "documentation": {}
+    },
+    {
+        "label": "test_monitor_logs_slow_request",
+        "kind": 2,
+        "importPath": "tests.test_core",
+        "description": "tests.test_core",
+        "peekOfCode": "def test_monitor_logs_slow_request(tmp_path, monkeypatch):\n    fake_log_file = tmp_path / \"slowpoke.log\"\n    monkeypatch.setattr(\"slowpoke.logger.LOG_FILE\", fake_log_file)\n    monkeypatch.setattr(\"slowpoke.logger.LOG_DIR\", tmp_path)\n    app = Flask(__name__)\n    monitor(app)\n    @app.route(\"/slow\")\n    def slow():\n        time.sleep(0.15)  # 150ms > 100ms default threshold\n        return \"slow response\"",
+        "detail": "tests.test_core",
+        "documentation": {}
+    },
+    {
+        "label": "DummyRequest",
+        "kind": 6,
+        "importPath": "tests.test_logger",
+        "description": "tests.test_logger",
+        "peekOfCode": "class DummyRequest:\n    method = \"POST\"\n    path = \"/submit\"\nclass DummyResponse:\n    status_code = 201\ndef test_log_slow_request(tmp_path, monkeypatch):\n    fake_log_file = tmp_path / \"slowpoke.log\"\n    fake_log_dir = fake_log_file.parent\n    monkeypatch.setattr(\"slowpoke.logger.LOG_FILE\", fake_log_file)\n    monkeypatch.setattr(\"slowpoke.logger.LOG_DIR\", fake_log_dir)",
+        "detail": "tests.test_logger",
+        "documentation": {}
+    },
+    {
+        "label": "DummyResponse",
+        "kind": 6,
+        "importPath": "tests.test_logger",
+        "description": "tests.test_logger",
+        "peekOfCode": "class DummyResponse:\n    status_code = 201\ndef test_log_slow_request(tmp_path, monkeypatch):\n    fake_log_file = tmp_path / \"slowpoke.log\"\n    fake_log_dir = fake_log_file.parent\n    monkeypatch.setattr(\"slowpoke.logger.LOG_FILE\", fake_log_file)\n    monkeypatch.setattr(\"slowpoke.logger.LOG_DIR\", fake_log_dir)\n    log_slow_request(DummyRequest(), DummyResponse(), 123.45)\n    assert fake_log_file.exists()\n    logs = fake_log_file.read_text().strip().split(\"\\n\")",
+        "detail": "tests.test_logger",
+        "documentation": {}
+    },
+    {
+        "label": "test_log_slow_request",
+        "kind": 2,
+        "importPath": "tests.test_logger",
+        "description": "tests.test_logger",
+        "peekOfCode": "def test_log_slow_request(tmp_path, monkeypatch):\n    fake_log_file = tmp_path / \"slowpoke.log\"\n    fake_log_dir = fake_log_file.parent\n    monkeypatch.setattr(\"slowpoke.logger.LOG_FILE\", fake_log_file)\n    monkeypatch.setattr(\"slowpoke.logger.LOG_DIR\", fake_log_dir)\n    log_slow_request(DummyRequest(), DummyResponse(), 123.45)\n    assert fake_log_file.exists()\n    logs = fake_log_file.read_text().strip().split(\"\\n\")\n    assert len(logs) == 1\n    entry = json.loads(logs[0])",
+        "detail": "tests.test_logger",
         "documentation": {}
     }
 ]

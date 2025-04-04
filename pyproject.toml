@@ -19,3 +19,13 @@ slowpoke = "slowpoke.cli:main"
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["slowpoke"]
+
+[tool.setuptools.package-dir]
+slowpoke = "slowpoke"
+
+
+[project.optional-dependencies]
+dev = ["pytest"]
