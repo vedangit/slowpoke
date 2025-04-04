@@ -19,11 +19,11 @@ pip install git+https://github.com/vedangit/slowpoke.git
 ### 1. Add `slowpoke` to your Flask app
 
 ```python
-from flask import Flask
-from slowpoke import SlowpokeLogger
+from slowpoke import monitor
 
 app = Flask(__name__)
-slowpoke_logger = SlowpokeLogger(app, threshold_ms=1000)
+monitor(app)
+
 ```
 
 > The `threshold_ms` parameter sets the time (in milliseconds) after which a request is considered slow.
