@@ -1,4 +1,4 @@
-<centre># 🐢 Slowpoke</centre>
+<h1 align="center" style="font-size: 4rem;">🐢 SLOWPOKE</h1>
 
 **Slowpoke** is a lightweight Python package that helps you monitor and log **slow API routes** in your Flask application. If you're wondering _"Which endpoints are dragging me down?"_, Slowpoke has your back.
 
