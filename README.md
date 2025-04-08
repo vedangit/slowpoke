@@ -1,4 +1,5 @@
 # 🐢 Slowpoke
+<h1 align="center" style="font-size: 4rem;">🐢 SLOWPOKE</h1>
 
 **Slowpoke** is a lightweight Python package that helps you monitor and log **slow API routes** in your Flask application. If you're wondering _"Which endpoints are dragging me down?"_, Slowpoke has your back.
 
@@ -19,11 +20,11 @@ pip install git+https://github.com/vedangit/slowpoke.git
 ### 1. Add `slowpoke` to your Flask app
 
 ```python
-from flask import Flask
 from slowpoke import monitor
 
 app = Flask(__name__)
 monitor(app)
+
 ```
 
 > The `threshold_ms` parameter sets the time (in milliseconds) after which a request is considered slow.
