@@ -132,28 +132,21 @@
         "documentation": {}
     },
     {
+        "label": "hashlib",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "hashlib",
+        "description": "hashlib",
+        "detail": "hashlib",
+        "documentation": {}
+    },
+    {
         "label": "subprocess",
         "kind": 6,
         "isExtraImport": true,
         "importPath": "subprocess",
         "description": "subprocess",
         "detail": "subprocess",
-        "documentation": {}
-    },
-    {
-        "label": "LOG_FILE",
-        "importPath": "slowpoke.logger",
-        "description": "slowpoke.logger",
-        "isExtraImport": true,
-        "detail": "slowpoke.logger",
-        "documentation": {}
-    },
-    {
-        "label": "log_slow_request",
-        "importPath": "slowpoke.logger",
-        "description": "slowpoke.logger",
-        "isExtraImport": true,
-        "detail": "slowpoke.logger",
         "documentation": {}
     },
     {
@@ -178,6 +171,14 @@
         "description": "slowpoke.core",
         "isExtraImport": true,
         "detail": "slowpoke.core",
+        "documentation": {}
+    },
+    {
+        "label": "log_slow_request",
+        "importPath": "slowpoke.logger",
+        "description": "slowpoke.logger",
+        "isExtraImport": true,
+        "detail": "slowpoke.logger",
         "documentation": {}
     },
     {
@@ -262,20 +263,20 @@
         "documentation": {}
     },
     {
-        "label": "log_slow_request",
+        "label": "get_project_log_file",
         "kind": 2,
         "importPath": "slowpoke.logger",
         "description": "slowpoke.logger",
-        "peekOfCode": "def log_slow_request(request, response, duration):\n    LOG_DIR.mkdir(parents=True, exist_ok=True)\n    log_entry = {\n        \"timestamp\": datetime.now().isoformat(),\n        \"method\": request.method,\n        \"route\": request.path,\n        \"status_code\": response.status_code,\n        \"duration_ms\": round(duration, 2)\n    }\n    with open(LOG_FILE, \"a\") as f:",
+        "peekOfCode": "def get_project_log_file():\n    cwd = Path.cwd()\n    project_hash = hashlib.md5(str(cwd).encode()).hexdigest()[:8]  # short hash for uniqueness\n    project_name = cwd.name or \"default\"\n    safe_project_name = project_name.replace(\" \", \"_\").replace(\".\", \"_\")\n    log_dir = Path.home() / '.slowpoke' / 'logs' / f\"{safe_project_name}_{project_hash}\"\n    log_dir.mkdir(parents=True, exist_ok=True)\n    return log_dir / 'slowpoke.log'\nLOG_FILE = get_project_log_file()\ndef log_slow_request(request, response, duration):",
         "detail": "slowpoke.logger",
         "documentation": {}
     },
     {
-        "label": "LOG_DIR",
-        "kind": 5,
+        "label": "log_slow_request",
+        "kind": 2,
         "importPath": "slowpoke.logger",
         "description": "slowpoke.logger",
-        "peekOfCode": "LOG_DIR = Path.home() /'.slowpoke' / 'logs'\nLOG_FILE = LOG_DIR / 'slowpoke.log'\ndef log_slow_request(request, response, duration):\n    LOG_DIR.mkdir(parents=True, exist_ok=True)\n    log_entry = {\n        \"timestamp\": datetime.now().isoformat(),\n        \"method\": request.method,\n        \"route\": request.path,\n        \"status_code\": response.status_code,\n        \"duration_ms\": round(duration, 2)",
+        "peekOfCode": "def log_slow_request(request, response, duration):\n    log_entry = {\n        \"timestamp\": datetime.now().isoformat(),\n        \"method\": request.method,\n        \"route\": request.path,\n        \"status_code\": response.status_code,\n        \"duration_ms\": round(duration, 2)\n    }\n    with open(LOG_FILE, \"a\") as f:\n        f.write(json.dumps(log_entry) + \"\\n\")",
         "detail": "slowpoke.logger",
         "documentation": {}
     },
@@ -284,7 +285,7 @@
         "kind": 5,
         "importPath": "slowpoke.logger",
         "description": "slowpoke.logger",
-        "peekOfCode": "LOG_FILE = LOG_DIR / 'slowpoke.log'\ndef log_slow_request(request, response, duration):\n    LOG_DIR.mkdir(parents=True, exist_ok=True)\n    log_entry = {\n        \"timestamp\": datetime.now().isoformat(),\n        \"method\": request.method,\n        \"route\": request.path,\n        \"status_code\": response.status_code,\n        \"duration_ms\": round(duration, 2)\n    }",
+        "peekOfCode": "LOG_FILE = get_project_log_file()\ndef log_slow_request(request, response, duration):\n    log_entry = {\n        \"timestamp\": datetime.now().isoformat(),\n        \"method\": request.method,\n        \"route\": request.path,\n        \"status_code\": response.status_code,\n        \"duration_ms\": round(duration, 2)\n    }\n    with open(LOG_FILE, \"a\") as f:",
         "detail": "slowpoke.logger",
         "documentation": {}
     },
@@ -293,7 +294,7 @@
         "kind": 2,
         "importPath": "tests.test_cli",
         "description": "tests.test_cli",
-        "peekOfCode": "def test_cli_report(tmp_path, monkeypatch, capsys):\n    log_path = tmp_path / \"slowpoke.log\"\n    monkeypatch.setattr(\"slowpoke.logger.LOG_FILE\", log_path)\n    monkeypatch.setattr(\"slowpoke.logger.LOG_DIR\", tmp_path)\n    # Create a dummy log entry\n    log_path.write_text('{\"method\": \"GET\", \"route\": \"/\", \"status_code\": 200, \"duration_ms\": 150}\\n')\n    from slowpoke.cli import report\n    report()\n    out = capsys.readouterr().out\n    assert \"GET\" in out",
+        "peekOfCode": "def test_cli_report(tmp_path, monkeypatch, capsys):\n    # Simulate a project directory name\n    monkeypatch.setattr(\"pathlib.Path.cwd\", lambda: tmp_path / \"fake_project\")\n    # Compute where the logger will write logs\n    log_dir = Path.home() / \".slowpoke\" / \"fake_project\" / \"logs\"\n    log_dir.mkdir(parents=True, exist_ok=True)\n    log_path = log_dir / \"slowpoke.log\"\n    # Write a dummy log entry\n    log_path.write_text('{\"method\": \"GET\", \"route\": \"/\", \"status_code\": 200, \"duration_ms\": 150}\\n')\n    from slowpoke.cli import report",
         "detail": "tests.test_cli",
         "documentation": {}
     },
@@ -311,26 +312,8 @@
         "kind": 2,
         "importPath": "tests.test_core",
         "description": "tests.test_core",
-        "peekOfCode": "def test_monitor_logs_slow_request(tmp_path, monkeypatch):\n    fake_log_file = tmp_path / \"slowpoke.log\"\n    monkeypatch.setattr(\"slowpoke.logger.LOG_FILE\", fake_log_file)\n    monkeypatch.setattr(\"slowpoke.logger.LOG_DIR\", tmp_path)\n    app = Flask(__name__)\n    monitor(app)\n    @app.route(\"/slow\")\n    def slow():\n        time.sleep(0.15)  # 150ms > 100ms default threshold\n        return \"slow response\"",
+        "peekOfCode": "def test_monitor_logs_slow_request(tmp_path, monkeypatch):\n    # Simulate project directory name\n    monkeypatch.setattr(\"pathlib.Path.cwd\", lambda: tmp_path / \"fake_project\")\n    app = Flask(__name__)\n    monitor(app)\n    @app.route(\"/slow\")\n    def slow():\n        time.sleep(0.15)  # 150ms > 100ms default threshold\n        return \"slow response\"\n    with app.test_client() as client:",
         "detail": "tests.test_core",
-        "documentation": {}
-    },
-    {
-        "label": "DummyRequest",
-        "kind": 6,
-        "importPath": "tests.test_logger",
-        "description": "tests.test_logger",
-        "peekOfCode": "class DummyRequest:\n    method = \"POST\"\n    path = \"/submit\"\nclass DummyResponse:\n    status_code = 201\ndef test_log_slow_request(tmp_path, monkeypatch):\n    fake_log_file = tmp_path / \"slowpoke.log\"\n    fake_log_dir = fake_log_file.parent\n    monkeypatch.setattr(\"slowpoke.logger.LOG_FILE\", fake_log_file)\n    monkeypatch.setattr(\"slowpoke.logger.LOG_DIR\", fake_log_dir)",
-        "detail": "tests.test_logger",
-        "documentation": {}
-    },
-    {
-        "label": "DummyResponse",
-        "kind": 6,
-        "importPath": "tests.test_logger",
-        "description": "tests.test_logger",
-        "peekOfCode": "class DummyResponse:\n    status_code = 201\ndef test_log_slow_request(tmp_path, monkeypatch):\n    fake_log_file = tmp_path / \"slowpoke.log\"\n    fake_log_dir = fake_log_file.parent\n    monkeypatch.setattr(\"slowpoke.logger.LOG_FILE\", fake_log_file)\n    monkeypatch.setattr(\"slowpoke.logger.LOG_DIR\", fake_log_dir)\n    log_slow_request(DummyRequest(), DummyResponse(), 123.45)\n    assert fake_log_file.exists()\n    logs = fake_log_file.read_text().strip().split(\"\\n\")",
-        "detail": "tests.test_logger",
         "documentation": {}
     },
     {
@@ -338,7 +321,7 @@
         "kind": 2,
         "importPath": "tests.test_logger",
         "description": "tests.test_logger",
-        "peekOfCode": "def test_log_slow_request(tmp_path, monkeypatch):\n    fake_log_file = tmp_path / \"slowpoke.log\"\n    fake_log_dir = fake_log_file.parent\n    monkeypatch.setattr(\"slowpoke.logger.LOG_FILE\", fake_log_file)\n    monkeypatch.setattr(\"slowpoke.logger.LOG_DIR\", fake_log_dir)\n    log_slow_request(DummyRequest(), DummyResponse(), 123.45)\n    assert fake_log_file.exists()\n    logs = fake_log_file.read_text().strip().split(\"\\n\")\n    assert len(logs) == 1\n    entry = json.loads(logs[0])",
+        "peekOfCode": "def test_log_slow_request(tmp_path, monkeypatch):\n    # Monkeypatch Path.cwd() to simulate a project directory\n    monkeypatch.setattr(\"pathlib.Path.cwd\", lambda: tmp_path / \"my_test_project\")\n    # Simulate a request and response\n    class DummyRequest:\n        method = \"GET\"\n        path = \"/test-route\"\n    class DummyResponse:\n        status_code = 200\n    # Call the logger",
         "detail": "tests.test_logger",
         "documentation": {}
     }

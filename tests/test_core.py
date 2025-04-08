@@ -6,9 +6,8 @@ import json
 from slowpoke.core import monitor
 
 def test_monitor_logs_slow_request(tmp_path, monkeypatch):
-    fake_log_file = tmp_path / "slowpoke.log"
-    monkeypatch.setattr("slowpoke.logger.LOG_FILE", fake_log_file)
-    monkeypatch.setattr("slowpoke.logger.LOG_DIR", tmp_path)
+    # Simulate project directory name
+    monkeypatch.setattr("pathlib.Path.cwd", lambda: tmp_path / "fake_project")
 
     app = Flask(__name__)
     monitor(app)
@@ -21,12 +20,19 @@ def test_monitor_logs_slow_request(tmp_path, monkeypatch):
     with app.test_client() as client:
         client.get("/slow")
 
-    assert fake_log_file.exists()
+    # Get the actual log file path
+    log_file = Path.home() / ".slowpoke" / "fake_project" / "logs" / "slowpoke.log"
+    assert log_file.exists()
 
-    logs = fake_log_file.read_text().strip().split("\n")
+    logs = log_file.read_text().strip().split("\n")
     assert len(logs) >= 1
-    entry = json.loads(logs[0])
-    assert entry["method"] == "GET"
-    assert entry["route"] == "/slow"
-    assert entry["status_code"] == 200
-    assert entry["duration_ms"] > 100
+    for log in logs:
+        entry = json.loads(log)
+        if entry["route"] == "/slow":
+            assert entry["method"] == "GET"
+            assert entry["status_code"] == 200
+            assert entry["duration_ms"] > 100
+            break
+    else:
+        raise AssertionError("No log entry found for /slow route")
+

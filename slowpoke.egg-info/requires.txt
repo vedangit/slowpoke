@@ -1,6 +1,0 @@
-flask
-click
-tabulate
-
-[dev]
-pytest
